@@ -25,29 +25,43 @@ local Window = Rayfield:CreateWindow({
    KeySystem = false
 })
 
--- Создаем вкладку
-local Tab = Window:CreateTab("Главная", 4483362458)
+-- 🟦 Вкладка 1: Главная
+local MainTab = Window:CreateTab("Главная", 4483362458)
 
--- Кнопка 1: ESP
-Tab:CreateButton({
+MainTab:CreateButton({
     Name = "ESP",
     Callback = function()
         loadstring(game:HttpGet("https://pastefy.app/mYyfg2ZE/raw"))()
     end
 })
 
--- Кнопка 2: ColorCode
-Tab:CreateButton({
+MainTab:CreateButton({
     Name = "ColorCode",
     Callback = function()
         loadstring(game:HttpGet("https://pastefy.app/OMjEOAIN/raw"))()
     end
 })
 
--- Кнопка 3: Cheese thing
-Tab:CreateButton({
+MainTab:CreateButton({
     Name = "Cheese thing",
     Callback = function()
         loadstring(game:HttpGet("https://pastefy.app/g92FXJ0y/raw"))()
+    end
+})
+
+-- 🟩 Вкладка 2: Misc
+local MiscTab = Window:CreateTab("Misc", 4483362458)
+
+MiscTab:CreateButton({
+    Name = "IY",
+    Callback = function()
+        loadstring(game:HttpGet(('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'), true))()
+    end
+})
+
+MiscTab:CreateButton({
+    Name = "Fly gui v3",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
     end
 })
