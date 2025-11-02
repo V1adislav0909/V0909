@@ -3,9 +3,9 @@ local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 -- Создаем главное окно
 local Window = Rayfield:CreateWindow({
-   Name = "V0909 Gui V2.5",
+   Name = "V0909 Gui V4",
    Icon = 0,
-   LoadingTitle = "V0909 Gui V2.5",
+   LoadingTitle = "V0909 Gui V4",
    LoadingSubtitle = "by V1adislav0909",
    ShowText = "Hub",
    Theme = "Default",
@@ -56,10 +56,116 @@ MainTab:CreateButton({
 -----------------------------------------------------
 local MiscTab = Window:CreateTab("Misc", 4483362458)
 
+-- Кнопка IY
 MiscTab:CreateButton({
     Name = "IY",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+    end
+})
+
+-- Toggle Remove Cutscene
+local autoRemoveCutsceneEnabled = false
+local autoRemoveCutsceneConnection
+
+MiscTab:CreateToggle({
+    Name = "Remove Cutscene",
+    CurrentValue = false,
+    Flag = "AutoRemoveCutsceneToggle",
+    Callback = function(Value)
+        autoRemoveCutsceneEnabled = Value
+        local player = game.Players.LocalPlayer
+
+        if autoRemoveCutsceneEnabled then
+            autoRemoveCutsceneConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                if player and player:FindFirstChild("PlayerGui") then
+                    local cutscene = player.PlayerGui:FindFirstChild("CutsceneDeluxe")
+                    if cutscene then
+                        cutscene:Destroy()
+                    end
+                end
+            end)
+        else
+            if autoRemoveCutsceneConnection then
+                autoRemoveCutsceneConnection:Disconnect()
+            end
+        end
+    end
+})
+
+-- Секция Abandoned School
+MiscTab:CreateSection("Abandoned School")
+
+-- Кнопка Bring Burger / Get Ghostburger
+MiscTab:CreateButton({
+    Name = "Bring Burger / Get Ghostburger",
+    Callback = function()
+        local player = game.Players.LocalPlayer
+        local char = player.Character
+        if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+
+        local puzzleCheese = workspace:FindFirstChild("PuzzleBin") 
+                            and workspace.PuzzleBin:FindFirstChild("Puzzle | Cheese")
+
+        if puzzleCheese then
+            local cheesePart = puzzleCheese:FindFirstChild("Cheese")
+            local standPart = puzzleCheese:FindFirstChild("Stand")
+            
+            if cheesePart and cheesePart:IsA("BasePart") then
+                char.HumanoidRootPart.CFrame = cheesePart.CFrame + Vector3.new(0,5,0)
+            end
+
+            wait(0.3)
+
+            if standPart and standPart:IsA("BasePart") then
+                char.HumanoidRootPart.CFrame = standPart.CFrame * CFrame.Angles(math.rad(-90),0,0) + Vector3.new(0,5,0)
+                
+                local backpack = player:FindFirstChild("Backpack")
+                local tool = backpack and backpack:FindFirstChild("PuzzleCheeseTool")
+                if tool then
+                    tool.Parent = char
+                end
+            end
+        else
+            warn("Puzzle | Cheese не найден в PuzzleBin!")
+        end
+    end
+})
+
+-- Кнопка Collect all HW skins
+MiscTab:CreateButton({
+    Name = "Collect all HW skins",
+    Callback = function()
+        local player = game.Players.LocalPlayer
+        local char = player.Character
+        if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+
+        local HalloweenSchool = workspace:FindFirstChild("Map") 
+                                and workspace.Map:FindFirstChild("HalloweenSchool")
+
+        if not HalloweenSchool then return end
+
+        local locations = {
+            HalloweenSchool:FindFirstChild("PumpkinStand"),
+            HalloweenSchool:FindFirstChild("PsychoStand"),
+            HalloweenSchool:FindFirstChild("RobotStand"),
+            HalloweenSchool:FindFirstChild("GhostBear") and HalloweenSchool.GhostBear:FindFirstChild("Ghost")
+        }
+
+        for _, loc in pairs(locations) do
+            if loc then
+                local targetCFrame
+                if loc:IsA("BasePart") then
+                    targetCFrame = loc.CFrame
+                elseif loc:FindFirstChild("HumanoidRootPart") then
+                    targetCFrame = loc.HumanoidRootPart.CFrame
+                else
+                    targetCFrame = CFrame.new(loc:GetModelCFrame().Position)
+                end
+                char.HumanoidRootPart.CFrame = targetCFrame + Vector3.new(0,3,0)
+                wait(0.5)
+            end
+        end
     end
 })
 
@@ -68,7 +174,6 @@ MiscTab:CreateButton({
 -----------------------------------------------------
 local PlayerTab = Window:CreateTab("Player", 4483362458)
 
--- ⚙️ Слайдер скорости
 PlayerTab:CreateSlider({
    Name = "Скорость",
    Range = {16, 100},
@@ -84,7 +189,6 @@ PlayerTab:CreateSlider({
    end,
 })
 
--- ⚙️ Слайдер прыжка
 PlayerTab:CreateSlider({
    Name = "Прыжок",
    Range = {50, 200},
@@ -100,10 +204,8 @@ PlayerTab:CreateSlider({
    end,
 })
 
--- 🔴 Переключатель Noclip
 local noclipEnabled = false
 local noclipConnection
-
 PlayerTab:CreateToggle({
     Name = "Noclip",
     CurrentValue = false,
@@ -111,7 +213,6 @@ PlayerTab:CreateToggle({
     Callback = function(Value)
         noclipEnabled = Value
         local player = game.Players.LocalPlayer
-
         if noclipEnabled then
             noclipConnection = game:GetService("RunService").Stepped:Connect(function()
                 if player and player.Character then
@@ -123,14 +224,11 @@ PlayerTab:CreateToggle({
                 end
             end)
         else
-            if noclipConnection then
-                noclipConnection:Disconnect()
-            end
+            if noclipConnection then noclipConnection:Disconnect() end
         end
     end,
 })
 
--- 🟢 Переключатель Infinite Jump
 local infiniteJumpEnabled = false
 PlayerTab:CreateToggle({
     Name = "Infinite Jump",
@@ -155,10 +253,8 @@ end)
 -----------------------------------------------------
 local VisualsTab = Window:CreateTab("Visuals", 4483362458)
 
--- 🌙 FullBright (Loop)
 local fullbrightEnabled = false
 local fullbrightLoop
-
 VisualsTab:CreateToggle({
     Name = "Night Vision (FullBright)",
     CurrentValue = false,
@@ -166,34 +262,23 @@ VisualsTab:CreateToggle({
     Callback = function(Value)
         fullbrightEnabled = Value
         local lighting = game:GetService("Lighting")
-
         if fullbrightEnabled then
-            lighting.Brightness = 2
-            lighting.ClockTime = 14
-            lighting.FogEnd = 100000
-            lighting.GlobalShadows = false
-            lighting.OutdoorAmbient = Color3.new(1, 1, 1)
-
             fullbrightLoop = game:GetService("RunService").RenderStepped:Connect(function()
                 lighting.Brightness = 2
                 lighting.ClockTime = 14
                 lighting.FogEnd = 100000
                 lighting.GlobalShadows = false
-                lighting.OutdoorAmbient = Color3.new(1, 1, 1)
+                lighting.OutdoorAmbient = Color3.new(1,1,1)
             end)
         else
-            if fullbrightLoop then
-                fullbrightLoop:Disconnect()
-            end
+            if fullbrightLoop then fullbrightLoop:Disconnect() end
             lighting.GlobalShadows = true
         end
     end,
 })
 
--- 🟣 XRay
 local xrayEnabled = false
 local transparency = 0.5
-
 VisualsTab:CreateToggle({
     Name = "XRay",
     CurrentValue = false,
@@ -217,62 +302,56 @@ VisualsTab:CreateToggle({
 -----------------------------------------------------
 local TeleportsTab = Window:CreateTab("Teleports", 4483362458)
 
--- Кнопка: Color Code
+-- Color Code
 TeleportsTab:CreateButton({
     Name = "Color Code",
     Callback = function()
         local player = game.Players.LocalPlayer
-        local character = player.Character
-        if character and character:FindFirstChild("HumanoidRootPart") then
-            local puzzleBin = workspace:FindFirstChild("PuzzleBin")
-            if puzzleBin then
-                local colorCode = puzzleBin:FindFirstChild("ColorCode")
-                if colorCode then
-                    local decor = colorCode:FindFirstChild("Decor")
-                    if decor then
-                        local targetPart = decor:FindFirstChildWhichIsA("BasePart")
-                        if targetPart then
-                            character.HumanoidRootPart.CFrame = targetPart.CFrame + Vector3.new(0,5,0)
-                        else
-                            warn("Decor не содержит BasePart!")
-                        end
-                    else
-                        warn("Decor не найден в ColorCode!")
-                    end
-                else
-                    warn("ColorCode не найден в PuzzleBin!")
+        local char = player.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            local decor = workspace:FindFirstChild("PuzzleBin") 
+                          and workspace.PuzzleBin:FindFirstChild("ColorCode") 
+                          and workspace.PuzzleBin.ColorCode:FindFirstChild("Decor")
+            if decor then
+                local part = decor:FindFirstChildWhichIsA("BasePart")
+                if part then
+                    char.HumanoidRootPart.CFrame = part.CFrame + Vector3.new(0,3,0)
                 end
-            else
-                warn("PuzzleBin не найден в workspace!")
             end
         end
     end
 })
 
--- Кнопка: Cheese Altar (без BasePart)
+-- Cheese Altar
 TeleportsTab:CreateButton({
     Name = "Cheese Altar",
     Callback = function()
         local player = game.Players.LocalPlayer
-        local character = player.Character
-        if character and character:FindFirstChild("HumanoidRootPart") then
-            local puzzleBin = workspace:FindFirstChild("PuzzleBin")
-            if puzzleBin then
-                local cheeseAltar = puzzleBin:FindFirstChild("CheeseAltar")
-                if cheeseAltar then
-                    local detect = cheeseAltar:FindFirstChild("Detect")
-                    if detect then
-                        -- Используем позицию самой модели
-                        local targetPosition = (detect.GetModelCFrame and detect:GetModelCFrame().Position) or detect.Position
-                        character.HumanoidRootPart.CFrame = CFrame.new(targetPosition + Vector3.new(0,5,0))
-                    else
-                        warn("Detect не найден в CheeseAltar!")
-                    end
-                else
-                    warn("CheeseAltar не найден в PuzzleBin!")
+        local char = player.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            local cheeseAltar = workspace:FindFirstChild("PuzzleBin") 
+                                and workspace.PuzzleBin:FindFirstChild("CheeseAltar")
+            if cheeseAltar then
+                local base = cheeseAltar:FindFirstChildWhichIsA("BasePart")
+                if base then
+                    char.HumanoidRootPart.CFrame = base.CFrame + Vector3.new(0,3,0)
                 end
-            else
-                warn("PuzzleBin не найден в workspace!")
+            end
+        end
+    end
+})
+
+-- Lobby Spawn
+TeleportsTab:CreateButton({
+    Name = "Lobby",
+    Callback = function()
+        local player = game.Players.LocalPlayer
+        local char = player.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            local spawnLocation = workspace:FindFirstChild("Lobby") 
+                                  and workspace.Lobby:FindFirstChild("SpawnLocation")
+            if spawnLocation and spawnLocation:IsA("BasePart") then
+                char.HumanoidRootPart.CFrame = spawnLocation.CFrame + Vector3.new(0,3,0)
             end
         end
     end
