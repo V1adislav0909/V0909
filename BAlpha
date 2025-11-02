@@ -3,9 +3,9 @@ local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 -- Создаем главное окно
 local Window = Rayfield:CreateWindow({
-   Name = "V0909 Gui V2.3",
+   Name = "V0909 Gui V2.5",
    Icon = 0,
-   LoadingTitle = "V0909 Gui V2.3",
+   LoadingTitle = "V0909 Gui V2.5",
    LoadingSubtitle = "by V1adislav0909",
    ShowText = "Hub",
    Theme = "Default",
@@ -26,9 +26,9 @@ local Window = Rayfield:CreateWindow({
 })
 
 -----------------------------------------------------
--- 🟦 Вкладка: Главная
+-- 🟦 Вкладка: Main
 -----------------------------------------------------
-local MainTab = Window:CreateTab("Главная", 4483362458)
+local MainTab = Window:CreateTab("Main", 4483362458)
 
 MainTab:CreateButton({
     Name = "ESP",
@@ -210,4 +210,70 @@ VisualsTab:CreateToggle({
             end
         end
     end,
+})
+
+-----------------------------------------------------
+-- 🟫 Вкладка: Teleports
+-----------------------------------------------------
+local TeleportsTab = Window:CreateTab("Teleports", 4483362458)
+
+-- Кнопка: Color Code
+TeleportsTab:CreateButton({
+    Name = "Color Code",
+    Callback = function()
+        local player = game.Players.LocalPlayer
+        local character = player.Character
+        if character and character:FindFirstChild("HumanoidRootPart") then
+            local puzzleBin = workspace:FindFirstChild("PuzzleBin")
+            if puzzleBin then
+                local colorCode = puzzleBin:FindFirstChild("ColorCode")
+                if colorCode then
+                    local decor = colorCode:FindFirstChild("Decor")
+                    if decor then
+                        local targetPart = decor:FindFirstChildWhichIsA("BasePart")
+                        if targetPart then
+                            character.HumanoidRootPart.CFrame = targetPart.CFrame + Vector3.new(0,5,0)
+                        else
+                            warn("Decor не содержит BasePart!")
+                        end
+                    else
+                        warn("Decor не найден в ColorCode!")
+                    end
+                else
+                    warn("ColorCode не найден в PuzzleBin!")
+                end
+            else
+                warn("PuzzleBin не найден в workspace!")
+            end
+        end
+    end
+})
+
+-- Кнопка: Cheese Altar (без BasePart)
+TeleportsTab:CreateButton({
+    Name = "Cheese Altar",
+    Callback = function()
+        local player = game.Players.LocalPlayer
+        local character = player.Character
+        if character and character:FindFirstChild("HumanoidRootPart") then
+            local puzzleBin = workspace:FindFirstChild("PuzzleBin")
+            if puzzleBin then
+                local cheeseAltar = puzzleBin:FindFirstChild("CheeseAltar")
+                if cheeseAltar then
+                    local detect = cheeseAltar:FindFirstChild("Detect")
+                    if detect then
+                        -- Используем позицию самой модели
+                        local targetPosition = (detect.GetModelCFrame and detect:GetModelCFrame().Position) or detect.Position
+                        character.HumanoidRootPart.CFrame = CFrame.new(targetPosition + Vector3.new(0,5,0))
+                    else
+                        warn("Detect не найден в CheeseAltar!")
+                    end
+                else
+                    warn("CheeseAltar не найден в PuzzleBin!")
+                end
+            else
+                warn("PuzzleBin не найден в workspace!")
+            end
+        end
+    end
 })
