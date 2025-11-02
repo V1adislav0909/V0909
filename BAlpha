@@ -31,8 +31,176 @@ local MainTab = Window:CreateTab("Главная", 4483362458)
 MainTab:CreateButton({
     Name = "ESP",
     Callback = function()
-        loadstring(game:HttpGet("https://pastefy.app/mYyfg2ZE/raw"))()
+        loadstring(game:HttpGet("https://pastefy.app/xDIE7GTt/raw"))()
     end
+})
+
+MainTab:CreateButton({
+    Name = "ColorCode",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastefy.app/OMjEOAIN/raw"))()
+    end
+})
+
+MainTab:CreateButton({
+    Name = "Cheese thing",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastefy.app/g92FXJ0y/raw"))()
+    end
+})
+
+-- 🟩 Вкладка 2: Misc
+local MiscTab = Window:CreateTab("Misc", 4483362458)
+
+MiscTab:CreateButton({
+    Name = "IY",
+    Callback = function()
+        loadstring(game:HttpGet(('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'), true))()
+    end
+})
+
+-- 🌙 Ночное видение (Loop FullBright)
+local fullbrightEnabled = false
+local fullbrightLoop
+
+MiscTab:CreateToggle({
+    Name = "Night Vision (FullBright)",
+    CurrentValue = false,
+    Flag = "FullBrightToggle",
+    Callback = function(Value)
+        fullbrightEnabled = Value
+        local lighting = game:GetService("Lighting")
+
+        if fullbrightEnabled then
+            -- Настройки яркости
+            lighting.Brightness = 2
+            lighting.ClockTime = 14
+            lighting.FogEnd = 100000
+            lighting.GlobalShadows = false
+            lighting.OutdoorAmbient = Color3.new(1, 1, 1)
+
+            -- Цикл, чтобы свет не сбрасывался
+            fullbrightLoop = game:GetService("RunService").RenderStepped:Connect(function()
+                lighting.Brightness = 2
+                lighting.ClockTime = 14
+                lighting.FogEnd = 100000
+                lighting.GlobalShadows = false
+                lighting.OutdoorAmbient = Color3.new(1, 1, 1)
+            end)
+        else
+            if fullbrightLoop then
+                fullbrightLoop:Disconnect()
+            end
+            lighting.GlobalShadows = true
+        end
+    end,
+})
+
+-- 🟨 Вкладка 3: Player
+local PlayerTab = Window:CreateTab("Player", 4483362458)
+
+-- ⚙️ Слайдер для изменения скорости
+PlayerTab:CreateSlider({
+   Name = "Скорость",
+   Range = {16, 100},
+   Increment = 1,
+   Suffix = "Speed",
+   CurrentValue = 16,
+   Flag = "SpeedSlider",
+   Callback = function(Value)
+       local player = game.Players.LocalPlayer
+       if player and player.Character and player.Character:FindFirstChild("Humanoid") then
+           player.Character.Humanoid.WalkSpeed = Value
+       end
+   end,
+})
+
+-- ⚙️ Слайдер для изменения высоты прыжка
+PlayerTab:CreateSlider({
+   Name = "Прыжок",
+   Range = {50, 200},
+   Increment = 1,
+   Suffix = "Jump",
+   CurrentValue = 50,
+   Flag = "JumpSlider",
+   Callback = function(Value)
+       local player = game.Players.LocalPlayer
+       if player and player.Character and player.Character:FindFirstChild("Humanoid") then
+           player.Character.Humanoid.JumpPower = Value
+       end
+   end,
+})
+
+-- 🔴 Переключатель Noclip
+local noclipEnabled = false
+local noclipConnection
+
+PlayerTab:CreateToggle({
+    Name = "Noclip",
+    CurrentValue = false,
+    Flag = "NoclipToggle",
+    Callback = function(Value)
+        noclipEnabled = Value
+        local player = game.Players.LocalPlayer
+
+        if noclipEnabled then
+            noclipConnection = game:GetService("RunService").Stepped:Connect(function()
+                if player and player.Character then
+                    for _, part in pairs(player.Character:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = false
+                        end
+                    end
+                end
+            end)
+        else
+            if noclipConnection then
+                noclipConnection:Disconnect()
+            end
+        end
+    end,
+})
+
+-- 🟢 Переключатель Infinite Jump
+local infiniteJumpEnabled = false
+PlayerTab:CreateToggle({
+    Name = "Infinite Jump",
+    CurrentValue = false,
+    Flag = "InfiniteJumpToggle",
+    Callback = function(Value)
+        infiniteJumpEnabled = Value
+    end,
+})
+
+game:GetService("UserInputService").JumpRequest:Connect(function()
+    if infiniteJumpEnabled then
+        local player = game.Players.LocalPlayer
+        if player and player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
+            player.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+        end
+    end
+end)
+
+-- 🟣 Переключатель XRay
+local xrayEnabled = false
+local transparency = 0.5
+
+PlayerTab:CreateToggle({
+    Name = "XRay",
+    CurrentValue = false,
+    Flag = "XRayToggle",
+    Callback = function(Value)
+        xrayEnabled = Value
+        for _, v in pairs(workspace:GetDescendants()) do
+            if v:IsA("BasePart") and v.Transparency < 1 and v.Name ~= "Terrain" then
+                if xrayEnabled then
+                    v.LocalTransparencyModifier = transparency
+                else
+                    v.LocalTransparencyModifier = 0
+                end
+            end
+        end
+    end,
 })
 
 MainTab:CreateButton({
