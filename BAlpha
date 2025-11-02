@@ -3,9 +3,9 @@ local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 -- Создаем главное окно
 local Window = Rayfield:CreateWindow({
-   Name = "V0909 Gui V1",
+   Name = "V0909 Gui V2.3",
    Icon = 0,
-   LoadingTitle = "V0909 Gui V1",
+   LoadingTitle = "V0909 Gui V2.3",
    LoadingSubtitle = "by V1adislav0909",
    ShowText = "Hub",
    Theme = "Default",
@@ -61,41 +61,6 @@ MiscTab:CreateButton({
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
     end
-})
-
--- 🌙 Ночное видение (Loop FullBright)
-local fullbrightEnabled = false
-local fullbrightLoop
-
-MiscTab:CreateToggle({
-    Name = "Night Vision (FullBright)",
-    CurrentValue = false,
-    Flag = "FullBrightToggle",
-    Callback = function(Value)
-        fullbrightEnabled = Value
-        local lighting = game:GetService("Lighting")
-
-        if fullbrightEnabled then
-            lighting.Brightness = 2
-            lighting.ClockTime = 14
-            lighting.FogEnd = 100000
-            lighting.GlobalShadows = false
-            lighting.OutdoorAmbient = Color3.new(1, 1, 1)
-
-            fullbrightLoop = game:GetService("RunService").RenderStepped:Connect(function()
-                lighting.Brightness = 2
-                lighting.ClockTime = 14
-                lighting.FogEnd = 100000
-                lighting.GlobalShadows = false
-                lighting.OutdoorAmbient = Color3.new(1, 1, 1)
-            end)
-        else
-            if fullbrightLoop then
-                fullbrightLoop:Disconnect()
-            end
-            lighting.GlobalShadows = true
-        end
-    end,
 })
 
 -----------------------------------------------------
@@ -185,11 +150,51 @@ game:GetService("UserInputService").JumpRequest:Connect(function()
     end
 end)
 
--- 🟣 Переключатель XRay
+-----------------------------------------------------
+-- 🟪 Вкладка: Visuals
+-----------------------------------------------------
+local VisualsTab = Window:CreateTab("Visuals", 4483362458)
+
+-- 🌙 FullBright (Loop)
+local fullbrightEnabled = false
+local fullbrightLoop
+
+VisualsTab:CreateToggle({
+    Name = "Night Vision (FullBright)",
+    CurrentValue = false,
+    Flag = "FullBrightToggle",
+    Callback = function(Value)
+        fullbrightEnabled = Value
+        local lighting = game:GetService("Lighting")
+
+        if fullbrightEnabled then
+            lighting.Brightness = 2
+            lighting.ClockTime = 14
+            lighting.FogEnd = 100000
+            lighting.GlobalShadows = false
+            lighting.OutdoorAmbient = Color3.new(1, 1, 1)
+
+            fullbrightLoop = game:GetService("RunService").RenderStepped:Connect(function()
+                lighting.Brightness = 2
+                lighting.ClockTime = 14
+                lighting.FogEnd = 100000
+                lighting.GlobalShadows = false
+                lighting.OutdoorAmbient = Color3.new(1, 1, 1)
+            end)
+        else
+            if fullbrightLoop then
+                fullbrightLoop:Disconnect()
+            end
+            lighting.GlobalShadows = true
+        end
+    end,
+})
+
+-- 🟣 XRay
 local xrayEnabled = false
 local transparency = 0.5
 
-PlayerTab:CreateToggle({
+VisualsTab:CreateToggle({
     Name = "XRay",
     CurrentValue = false,
     Flag = "XRayToggle",
