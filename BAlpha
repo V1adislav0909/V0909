@@ -1,0 +1,53 @@
+-- Загружаем Rayfield
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+-- Создаем главное окно
+local Window = Rayfield:CreateWindow({
+   Name = "V0909 Gui V1",
+   Icon = 0,
+   LoadingTitle = "V0909 Gui V1",
+   LoadingSubtitle = "by V1adislav0909",
+   ShowText = "Hub",
+   Theme = "Default",
+   ToggleUIKeybind = "K",
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false,
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil,
+      FileName = "V0909HubConfig"
+   },
+   Discord = {
+      Enabled = false,
+      Invite = "",
+      RememberJoins = true
+   },
+   KeySystem = false
+})
+
+-- Создаем вкладку
+local Tab = Window:CreateTab("Главная", 4483362458)
+
+-- Кнопка 1: ESP
+Tab:CreateButton({
+    Name = "ESP",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastefy.app/mYyfg2ZE/raw"))()
+    end
+})
+
+-- Кнопка 2: ColorCode
+Tab:CreateButton({
+    Name = "ColorCode",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastefy.app/OMjEOAIN/raw"))()
+    end
+})
+
+-- Кнопка 3: Cheese thing
+Tab:CreateButton({
+    Name = "Cheese thing",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastefy.app/g92FXJ0y/raw"))()
+    end
+})
